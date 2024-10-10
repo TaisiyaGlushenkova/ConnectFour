@@ -42,3 +42,7 @@ unittest --- Тестирование
 TOKEN = "ваш токен"
 Установите библиотеки из requirements.txt (pip install -r requirements.txt)
 Запустите main.py
+
+##Процент покрытия тестами
+с помощью nosetests
+![image](https://github.com/user-attachments/assets/7a440d1e-c34b-414b-bc4b-630dadc31d08)
