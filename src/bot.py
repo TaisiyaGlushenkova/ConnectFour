@@ -5,6 +5,8 @@ import string
 
 from src.room import Room
 
+from src.bot_texts import *
+
 from config import TOKEN
 
 bot = telebot.TeleBot(TOKEN)
@@ -27,29 +29,23 @@ def generate_new_code():
 
 @bot.message_handler(commands=["help"])
 def help(message):
+
     bot.send_message(
         message.chat.id,
-        text="""
-                    Нажми:
-                    /start для приветствия\n
-                    /help чтобы вывести эту памятку\n
-                    /rating для просмотра рейтинга\n
-                    /new для создания новой игры\n
-                    /join *code* если друг тебе прислал кодовое слово
-                    """,
+        text=memo,
     )
 
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    bot.send_message(message.chat.id, "Привет, я бот для игры в четыре в ряд")
+    bot.send_message(message.chat.id, greeting)
     help(message)
 
 
 @bot.message_handler(commands=["rating"])
 def callback_rating(message):
     if message.from_user.id not in players_rating:
-        bot.send_message(message.chat.id, text="Вы ещё не играли")
+        bot.send_message(message.chat.id, text=error_no_rating)
         return
     text = "\n".join(
         result + " " + str(count)
@@ -61,13 +57,13 @@ def callback_rating(message):
 @bot.message_handler(commands=["new"])
 def callback_new_game(message):
     keyboard = InlineKeyboardMarkup()
-    key_open = InlineKeyboardButton(text="Find me an opponent", callback_data="open")
-    key_close = InlineKeyboardButton(text="Invite a friend", callback_data="close")
+    key_open = InlineKeyboardButton(text=open_game, callback_data="open")
+    key_close = InlineKeyboardButton(text=close_game, callback_data="close")
     keyboard.row_width = 1
     keyboard.add(key_open, key_close)
     bot.send_message(
         message.chat.id,
-        text="Выберите тип игры",
+        text=choose_game_type,
         reply_markup=keyboard,
     )
 
@@ -75,18 +71,18 @@ def callback_new_game(message):
 def callback_sign_up(message):
     code = message.text
     if code in invitors:
-        m = bot.send_message(message.from_user.id, text="Это кодовое слово уже занято")
+        m = bot.send_message(message.from_user.id, text=code_exists)
         bot.register_next_step_handler(m, callback_sign_up)
     else:
         invitors[code] = message.from_user.id
         m = bot.send_message(
-            message.from_user.id, text="Отлично, теперь пришли код другу"
+            message.from_user.id, text=game_created
         )
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "close")
 def create_close_game(call):
-    bot.send_message(call.message.chat.id, text="Придумай кодовое слово")
+    bot.send_message(call.message.chat.id, text=make_up_code)
     bot.register_next_step_handler(call.message, callback_sign_up)
 
 
@@ -102,22 +98,22 @@ def callback_join(message):
     lst = message.text.split(" ")
     if len(lst) != 2:
         bot.send_message(
-            message.chat.id, text="Нужно ввести кодовое слово. Example: /join code"
+            message.chat.id, text=join_parse_error
         )
         return
 
     code = lst[1]
     if code not in invitors:
-        bot.send_message(message.from_user.id, text="Это кодовое слово не существует")
+        bot.send_message(message.from_user.id, text=game_not_exist)
         return
     elif code in rooms:
         bot.send_message(
             message.from_user.id,
-            text="Эта игра уже началась. Попросите друга прислать новое кодовое слово",
+            text=code_exists,
         )
         return
     elif invitors[code] == message.from_user.id:
-        bot.send_message(message.from_user.id, text="You can not play with yourself")
+        bot.send_message(message.from_user.id, text=join_yourself)
         return
     rooms[code] = Room(invitors[code], message.from_user.id, code)
     rooms[code].create_boards(bot)
@@ -126,13 +122,13 @@ def callback_join(message):
 @bot.callback_query_handler(func=lambda call: call.data == "open")
 def put_in_query(call):
     if call.from_user.id in waiting_players:
-        bot.send_message(call.from_user.id, text="Вы уже в очереди")
+        bot.send_message(call.from_user.id, text=twice_in_queue)
         return
     if len(waiting_players) == 0:
         waiting_players.append(call.from_user.id)
         bot.send_message(
             call.from_user.id,
-            text="Ожидайте",
+            text=wait_opponent,
         )
     else:
         opponent_id = waiting_players[-1]
@@ -155,7 +151,7 @@ def process_move(call):
     row = int(row)
     column = int(column)
     if code not in rooms:
-        bot.send_message(call.from_user.id, text="Эта игра закончилась")
+        bot.send_message(call.from_user.id, text=game_not_exist)
         return
     exit_code = rooms[code].put_symbol(call.from_user.id, (row, column), bot)
 
