@@ -34,5 +34,9 @@ TL;DR connect four game in telegram bot
 telebot --- Telegram API
 
 unittest --- Тестирование
-  
 
+##Запуск
+Поместите токен бота в файл config.py в виде
+TOKEN = "ваш токен"
+Установите библиотеки из requirements.txt
+Запустите main.py
