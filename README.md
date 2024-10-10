@@ -6,7 +6,9 @@ TL;DR connect four game in telegram bot
 
 /help даёт справку о боте
 
-/play начать новую игру
+/new начать новую игру
+
+/join *code* чтобы присоединиться к игре, созданной другом
 
 /rating таблица результатов
 
@@ -36,7 +38,7 @@ telebot --- Telegram API
 unittest --- Тестирование
 
 ##Запуск
-Поместите токен бота в файл config.py в root директории в виде
+В корневой директории создайте файл config.py и поместите токен бота в файл config.py в root директории в виде
 TOKEN = "ваш токен"
-Установите библиотеки из requirements.txt
+Установите библиотеки из requirements.txt (pip install -r requirements.txt)
 Запустите main.py
