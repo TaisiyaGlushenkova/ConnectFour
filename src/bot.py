@@ -43,7 +43,7 @@ def start(message):
 
 
 @bot.message_handler(commands=["rating"])
-def callback_rating(message):
+def rating(message):
     if message.from_user.id not in players_rating:
         bot.send_message(message.chat.id, text=error_no_rating)
         return
@@ -55,7 +55,7 @@ def callback_rating(message):
 
 
 @bot.message_handler(commands=["new"])
-def callback_new_game(message):
+def create_new_game(message):
     keyboard = InlineKeyboardMarkup()
     key_open = InlineKeyboardButton(text=open_game, callback_data="open")
     key_close = InlineKeyboardButton(text=close_game, callback_data="close")
