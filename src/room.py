@@ -49,9 +49,9 @@ class Room:
         whose_move_id = self.id2 if self.field.full_cells_count % 2 == 1 else self.id1
         opponent_id = self.id1 if self.id1 != whose_move_id else self.id2
         if whose_move_id != user_id:
-            return 0
+            return 1
         if self.field.make_move(cord[0], cord[1]) == -1:
-            return 0
+            return 1
 
         for msg in [self.message_1, self.message_2]:
             try:
