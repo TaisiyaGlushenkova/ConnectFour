@@ -1,5 +1,6 @@
 from src.bot import *
 
+
 def listener(messages):
     for m in messages:
         print(str(m))

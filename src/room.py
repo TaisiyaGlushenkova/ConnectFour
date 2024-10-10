@@ -2,17 +2,21 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from src.field import Field
 
+
 def create_keyboard(field, code):
     keyboard = InlineKeyboardMarkup()
     keyboard.row_width = field.width
     for row in range(field.height):
         line = []
         for column in range(field.width):
-            key = InlineKeyboardButton(text=field.field_storage[row][column],
-                                             callback_data=str(row) + " " + str(column) + " " + code)
+            key = InlineKeyboardButton(
+                text=field.field_storage[row][column],
+                callback_data=str(row) + " " + str(column) + " " + code,
+            )
             line.append(key)
         keyboard.add(*line)
     return keyboard
+
 
 class Room:
     def __init__(self, id1, id2, code):
@@ -25,14 +29,21 @@ class Room:
 
     def get_keyboard(self):
         return create_keyboard(self.field, self.code)
-    
+
     def get_players_id(self):
         return self.id1, self.id2
 
     def create_boards(self, bot):
-        self.message_1 = bot.send_message(chat_id=self.id1, text="The game has started. Your symbol is x", reply_markup=self.get_keyboard())
-        self.message_2 = bot.send_message(chat_id=self.id2, text="The game has started. Your symbol is o", reply_markup=self.get_keyboard())
-
+        self.message_1 = bot.send_message(
+            chat_id=self.id1,
+            text="The game has started. Your symbol is x",
+            reply_markup=self.get_keyboard(),
+        )
+        self.message_2 = bot.send_message(
+            chat_id=self.id2,
+            text="The game has started. Your symbol is o",
+            reply_markup=self.get_keyboard(),
+        )
 
     def put_symbol(self, user_id, cord, bot):
         whose_move_id = self.id2 if self.field.full_cells_count % 2 == 1 else self.id1
@@ -41,14 +52,16 @@ class Room:
             return 0
         if self.field.make_move(cord[0], cord[1]) == -1:
             return 0
-        
+
         for msg in [self.message_1, self.message_2]:
             try:
                 bot.edit_message_text(
-                    text="It's your turn" if msg.chat.id != whose_move_id else "It's opponent's turn",
+                    text="It's your turn"
+                    if msg.chat.id != whose_move_id
+                    else "It's opponent's turn",
                     chat_id=msg.chat.id,
                     message_id=msg.id,
-                    reply_markup=self.get_keyboard()
+                    reply_markup=self.get_keyboard(),
                 )
             except Exception as e:
                 print(e)
