@@ -3,7 +3,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import random
 import string
 
-from room import Room
+from src.room import Room
 
 from config import TOKEN
 

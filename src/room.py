@@ -1,6 +1,6 @@
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from field import Field
+from src.field import Field
 
 def create_keyboard(field, code):
     keyboard = InlineKeyboardMarkup()
