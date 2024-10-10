@@ -37,12 +37,12 @@ telebot --- Telegram API
 
 unittest --- Тестирование
 
-##Запуск
+## Запуск
 В корневой директории создайте файл config.py и поместите токен бота в файл config.py в root директории в виде
 TOKEN = "ваш токен"
 Установите библиотеки из requirements.txt (pip install -r requirements.txt)
 Запустите main.py
 
-##Процент покрытия тестами
+## Процент покрытия тестами
 с помощью nosetests
 ![image](https://github.com/user-attachments/assets/7a440d1e-c34b-414b-bc4b-630dadc31d08)
