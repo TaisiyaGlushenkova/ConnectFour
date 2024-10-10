@@ -7,6 +7,19 @@ from src.field import Field
 
 
 def create_keyboard(field : Field, code : str) -> InlineKeyboardMarkup:
+    """
+    Create a keyboard for the given field and code.
+
+    The keyboard is a single InlineKeyboardMarkup with buttons
+    labeled with the values of the field. The callback data for
+    each button is a string of the form "row column code".
+
+    :param field: The Field object whose state is used as the
+                  button labels.
+    :param code: The string that is appended to the callback data
+                 of each button.
+    :return: The created InlineKeyboardMarkup.
+    """
     keyboard = InlineKeyboardMarkup()
     keyboard.row_width = field.width
     for row in range(field.height):
@@ -22,21 +35,56 @@ def create_keyboard(field : Field, code : str) -> InlineKeyboardMarkup:
 
 
 class Room:
+    """
+    Represents a game room for two players.
+
+    Attributes:
+        id1 (Union[int, str]): The ID of the first player.
+        id2 (Union[int, str]): The ID of the second player.
+        code (str): A code to identify the room.
+        field (Field): The game field.
+        message_1 (Optional[Message]): The message sent to the first player.
+        message_2 (Optional[Message]): The message sent to the second player.
+    """
     def __init__(self, id1 : Union[int, str], id2 : Union[int, str], code : str) -> None:
+        """
+        Initializes a new Room object.
+
+        :param id1: The ID of the first player.
+        :param id2: The ID of the second player.
+        :param code: A code to identify the room.
+        """
         self.id1 = id1
         self.id2 = id2
         self.code = code
         self.field = Field()
         self.message_1 = None
         self.message_2 = None
-
+        
     def get_keyboard(self) -> InlineKeyboardMarkup:
+        """
+        Creates and returns an inline keyboard for the game field.
+
+        :return: An inline keyboard for the game field.
+        """
         return create_keyboard(self.field, self.code)
 
     def get_players_id(self) -> tuple[int, int]:
+        """
+        Returns a tuple of the player IDs in the room.
+
+        :return: A tuple of two player IDs.
+        """
         return self.id1, self.id2
 
     def create_boards(self, bot : TeleBot) -> None:
+        """
+        Sends a message to both players with an inline keyboard representing
+        the game board.
+
+        :param bot: The bot used to send the messages.
+        :type bot: TeleBot
+        """
         self.message_1 = bot.send_message(
             chat_id=self.id1,
             text="The game has started. Your symbol is x",
@@ -49,6 +97,18 @@ class Room:
         )
 
     def put_symbol(self, user_id : Union[int, str], cord : tuple[int, int], bot : TeleBot) -> int:
+        """
+        Processes a move in the game.
+
+        :param user_id: The ID of the player who made the move.
+        :type user_id: int or str
+        :param cord: The coordinates of the cell where the move was made.
+        :type cord: tuple of two ints
+        :param bot: The bot used to edit the messages with the game field.
+        :type bot: TeleBot
+        :return: 0 if the move was successful, 1 if the move was invalid, -1 if the game ended in a draw, -2 if the game ended with a win.
+        :rtype: int
+        """
         whose_move_id = self.id2 if self.field.full_cells_count % 2 == 1 else self.id1
         opponent_id = self.id1 if self.id1 != whose_move_id else self.id2
         if whose_move_id != user_id:
