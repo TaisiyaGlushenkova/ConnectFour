@@ -160,12 +160,3 @@ def process_move(call):
             opponent_id = players_id[0] if players_id[0] != call.from_user.id else players_id[1]
             add_game(call.from_user.id, "WIN")
             add_game(opponent_id, "LOSE")
-
-def listener(messages):
-    for m in messages:
-        print(str(m))
-
-
-if __name__ == "__main__":
-    bot.set_update_listener(listener)
-    bot.infinity_polling()
