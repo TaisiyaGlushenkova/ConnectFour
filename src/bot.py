@@ -29,7 +29,6 @@ def generate_new_code():
 
 @bot.message_handler(commands=["help"])
 def help(message):
-
     bot.send_message(
         message.chat.id,
         text=memo,
@@ -68,52 +67,42 @@ def create_new_game(message):
     )
 
 
-def callback_sign_up(message):
+def check_code(message):
     code = message.text
     if code in invitors:
         m = bot.send_message(message.from_user.id, text=code_exists)
-        bot.register_next_step_handler(m, callback_sign_up)
+        bot.register_next_step_handler(m, check_code)
     else:
         invitors[code] = message.from_user.id
-        m = bot.send_message(
-            message.from_user.id, text=game_created
-        )
+        m = bot.send_message(message.from_user.id, text=code_accepted)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "close")
 def create_close_game(call):
     bot.send_message(call.message.chat.id, text=make_up_code)
-    bot.register_next_step_handler(call.message, callback_sign_up)
-
-
-def get_room_number(id):
-    for i in range(len(rooms)):
-        if rooms[i].id1 == id or rooms[i].id2 == id:
-            return i
-    return -1
+    bot.register_next_step_handler(call.message, check_code)
 
 
 @bot.message_handler(commands=["join"])
-def callback_join(message):
+def try_join(message):
     lst = message.text.split(" ")
     if len(lst) != 2:
-        bot.send_message(
-            message.chat.id, text=join_parse_error
-        )
+        bot.send_message(message.chat.id, text=join_parse_error)
         return
 
     code = lst[1]
-    if code not in invitors:
-        bot.send_message(message.from_user.id, text=game_not_exist)
-        return
-    elif code in rooms:
+
+    if code in rooms:
         bot.send_message(
             message.from_user.id,
             text=code_exists,
         )
         return
-    elif invitors[code] == message.from_user.id:
+    if code in invitors and invitors[code] == message.from_user.id:
         bot.send_message(message.from_user.id, text=join_yourself)
+        return
+    if code not in invitors:
+        bot.send_message(message.from_user.id, text=game_not_exist)
         return
     rooms[code] = Room(invitors[code], message.from_user.id, code)
     rooms[code].create_boards(bot)

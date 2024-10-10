@@ -19,7 +19,7 @@ choose_game_type = "Choose game type"
 
 code_exists = "This code has been already used"
 
-game_created = "Great, now send this code to your friend"
+code_accepted = "Great, now send this code to your friend"
 
 make_up_code = "Think of a code"
 
