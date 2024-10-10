@@ -148,6 +148,9 @@ def process_move(call):
     row, column, code = call.data.split(" ")
     row = int(row)
     column = int(column)
+    if code not in rooms:
+        bot.send_message(call.from_user.id, text="Эта игра закончилась")
+        return
     exit_code = rooms[code].put_symbol(call.from_user.id, (row, column), bot)
 
     if exit_code < 0:
