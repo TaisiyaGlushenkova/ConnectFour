@@ -1,25 +1,27 @@
+from typing import Union
+
 class Point:
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int) -> None:
         self.x = x
         self.y = y
 
-    def __add__(self, other):
+    def __add__(self, other : "Point") -> "Point":
         return Point(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other):
+    def __sub__(self, other : "Point") -> "Point":
         return Point(self.x - other.x, self.y - other.y)
 
-    def __lt__(self, other):
+    def __lt__(self, other : "Point") -> bool:
         return self.x < other.x and self.y < other.y
 
-    def __eq__(self, other):
+    def __eq__(self, other : "Point") -> bool:
         return self.x == other.x and self.y == other.y
 
-    def __mul__(self, coefficient):
+    def __mul__(self, coefficient : int) -> "Point":
         return Point(self.x * coefficient, self.y * coefficient)
 
 
-def at(point, arr):
+def at(point : "Point", arr : list) -> str:
     return arr[point.y][point.x]
 
 
@@ -31,7 +33,7 @@ class Field:
         self.field_storage = [[" "] * self.width for i in range(self.height)]
         self.full_cells_count = 0
 
-    def make_move(self, row, column):
+    def make_move(self, row : int, column : int) -> int:
         if self.field_storage[0][column] != " ":
             return -1
         symbol = "x"
@@ -45,7 +47,7 @@ class Field:
         self.full_cells_count += 1
         return 0
 
-    def is_win(self):
+    def is_win(self) -> tuple[bool, int, int, Point]:
         for dir in [Point(1, 0), Point(0, 1), Point(1, 1)]:
             for row in range(self.height - dir.y * (self.chain_length - 1)):
                 for column in range(self.width - dir.x * (self.chain_length - 1)):
@@ -71,7 +73,7 @@ class Field:
                     return True, row, column, Point(1, -1)
         return False, 0, 0, Point(0, 0)
 
-    def is_game_over(self):
+    def is_game_over(self) -> tuple[bool, tuple[int, int], Union[str, Point]]:
         is_win, y, x, dir = self.is_win()
         if is_win:
             return is_win, (y, x), dir

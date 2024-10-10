@@ -20,7 +20,7 @@ waiting_players = []
 rooms = {}
 
 
-def generate_new_code():
+def generate_new_code() -> str:
     code = ""
     while code in rooms:
         code = "".join(random.choices(string.ascii_uppercase + string.digits, k=20))
@@ -28,7 +28,7 @@ def generate_new_code():
 
 
 @bot.message_handler(commands=["help"])
-def help(message):
+def help(message : telebot.types.Message) -> None:
     bot.send_message(
         message.chat.id,
         text=memo,
@@ -36,13 +36,13 @@ def help(message):
 
 
 @bot.message_handler(commands=["start"])
-def start(message):
+def start(message : telebot.types.Message) -> None:
     bot.send_message(message.chat.id, greeting)
     help(message)
 
 
 @bot.message_handler(commands=["rating"])
-def rating(message):
+def rating(message : telebot.types.Message) -> None:
     if message.from_user.id not in players_rating:
         bot.send_message(message.chat.id, text=error_no_rating)
         return
@@ -54,7 +54,7 @@ def rating(message):
 
 
 @bot.message_handler(commands=["new"])
-def create_new_game(message):
+def create_new_game(message : telebot.types.Message) -> None:
     keyboard = InlineKeyboardMarkup()
     key_open = InlineKeyboardButton(text=open_game, callback_data="open")
     key_close = InlineKeyboardButton(text=close_game, callback_data="close")
@@ -67,7 +67,7 @@ def create_new_game(message):
     )
 
 
-def check_code(message):
+def check_code(message : telebot.types.Message) -> None:
     code = message.text
     if code in invitors:
         m = bot.send_message(message.from_user.id, text=code_exists)
@@ -78,13 +78,13 @@ def check_code(message):
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "close")
-def create_close_game(call):
+def create_close_game(call : telebot.types.CallbackQuery) -> None:
     bot.send_message(call.message.chat.id, text=make_up_code)
     bot.register_next_step_handler(call.message, check_code)
 
 
 @bot.message_handler(commands=["join"])
-def try_join(message):
+def try_join(message : telebot.types.Message) -> None:
     lst = message.text.split(" ")
     if len(lst) != 2:
         bot.send_message(message.chat.id, text=join_parse_error)
@@ -109,7 +109,7 @@ def try_join(message):
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "open")
-def put_in_query(call):
+def put_in_query(call : telebot.types.CallbackQuery) -> None:
     if call.from_user.id in waiting_players:
         bot.send_message(call.from_user.id, text=twice_in_queue)
         return
@@ -128,14 +128,14 @@ def put_in_query(call):
         rooms[code].create_boards(bot)
 
 
-def add_game(id, result):
+def add_game(id, result : str) -> None:
     if id not in players_rating:
         players_rating[id] = {"WIN": 0, "LOSE": 0, "DRAW": 0}
     players_rating[id][result] += 1
 
 
 @bot.callback_query_handler(func=lambda call: True)
-def process_move(call):
+def process_move(call : telebot.types.CallbackQuery) -> None:
     row, column, code = call.data.split(" ")
     row = int(row)
     column = int(column)

@@ -1,9 +1,12 @@
+from typing import Union
+
+from telebot import TeleBot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from src.field import Field
 
 
-def create_keyboard(field, code):
+def create_keyboard(field : Field, code : str) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup()
     keyboard.row_width = field.width
     for row in range(field.height):
@@ -19,7 +22,7 @@ def create_keyboard(field, code):
 
 
 class Room:
-    def __init__(self, id1, id2, code):
+    def __init__(self, id1 : Union[int, str], id2 : Union[int, str], code : str) -> None:
         self.id1 = id1
         self.id2 = id2
         self.code = code
@@ -27,13 +30,13 @@ class Room:
         self.message_1 = None
         self.message_2 = None
 
-    def get_keyboard(self):
+    def get_keyboard(self) -> InlineKeyboardMarkup:
         return create_keyboard(self.field, self.code)
 
-    def get_players_id(self):
+    def get_players_id(self) -> tuple[int, int]:
         return self.id1, self.id2
 
-    def create_boards(self, bot):
+    def create_boards(self, bot : TeleBot) -> None:
         self.message_1 = bot.send_message(
             chat_id=self.id1,
             text="The game has started. Your symbol is x",
@@ -45,7 +48,7 @@ class Room:
             reply_markup=self.get_keyboard(),
         )
 
-    def put_symbol(self, user_id, cord, bot):
+    def put_symbol(self, user_id : Union[int, str], cord : tuple[int, int], bot : TeleBot) -> int:
         whose_move_id = self.id2 if self.field.full_cells_count % 2 == 1 else self.id1
         opponent_id = self.id1 if self.id1 != whose_move_id else self.id2
         if whose_move_id != user_id:
