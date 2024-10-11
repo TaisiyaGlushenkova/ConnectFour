@@ -1,5 +1,7 @@
 import unittest
 
+from unittest.mock import MagicMock, patch
+
 from src.room import Room
 
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -7,36 +9,18 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from src.field import Field
 
 
-class MockChat:
-    def __init__(self, id):
-        self.id = id
-
-
-class MockMessage:
-    def __init__(self, chat, id, text):
-        self.chat = chat
-        self.id = id
-        self.text = text
-
-
-class MockBot:
-    def __init__(self):
-        pass
-
-    def send_message(self, chat_id, text, reply_markup=None):
-        return MockMessage(MockChat(chat_id), 0, text)
-
-    def edit_message_text(self, chat_id, message_id, text, reply_markup):
-        pass
-
-
 class RoomTest(unittest.TestCase):
     def setUp(self):
-        self.room = Room(1, 2, "some_random_code")
-        self.bot = MockBot()
+        self.room = Room(1, 2, "code")
+        self.room.message_1 = MagicMock()
+        self.room.message_1.text = "text"
+        self.room.message_1.message.chat.id = 1
+        self.room.message_2 = MagicMock()
+        self.room.message_2.text = "text"
+        self.room.message_2.message.chat.id = 2
 
     def tearDown(self):
-        return super().tearDown()
+        pass
 
     def test_get_keyboard(self):
         markup = self.room.get_keyboard()
@@ -60,14 +44,18 @@ class RoomTest(unittest.TestCase):
     def test_get_players_id(self):
         self.assertEqual(self.room.get_players_id(), (1, 2))
 
-    def test_create_boards(self):
-        self.room.create_boards(self.bot)
-        self.assertEqual(
-            self.room.message_1.text, "The game has started. Your symbol is x"
-        )
-        self.assertEqual(
-            self.room.message_2.text, "The game has started. Your symbol is o"
-        )
+    @patch("telebot.TeleBot.send_message")
+    def test_create_boards(self, send_message_mock):
+        bot = MagicMock()
+        bot.send_message = send_message_mock
+        self.room.create_boards(bot)
+        self.assertEqual(send_message_mock.call_count, 2)
+        call_args, call_kwargs = send_message_mock.call_args
+        self.assertEqual("The game has started. Your symbol is o", call_kwargs["text"])
 
-    def test_put_symbol(self):
-        self.assertEqual(self.room.put_symbol(1, (0, 0), self.bot), 0)
+    @patch("telebot.TeleBot.edit_message_text")
+    def test_put_symbol(self, edit_message_text_mock):
+        bot = MagicMock()
+        bot.edit_message_text = edit_message_text_mock
+        self.assertEqual(self.room.put_symbol(1, (0, 0), bot), 0)
+        self.assertEqual(edit_message_text_mock.call_count, 2)
