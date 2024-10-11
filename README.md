@@ -45,4 +45,5 @@ TOKEN = "ваш токен"
 
 ## Процент покрытия тестами
 с помощью nosetests
-![image](https://github.com/user-attachments/assets/7a440d1e-c34b-414b-bc4b-630dadc31d08)
+![image](https://github.com/user-attachments/assets/ebd48977-685d-4746-9b4f-450fbe9dceaa)
+
