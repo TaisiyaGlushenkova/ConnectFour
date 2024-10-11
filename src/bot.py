@@ -34,7 +34,7 @@ def generate_new_code() -> str:
 
 
 @bot.message_handler(commands=["help"])
-def help(message : telebot.types.Message) -> None:
+def help(message: telebot.types.Message) -> None:
     """
     Handles the /help command.
 
@@ -50,7 +50,7 @@ def help(message : telebot.types.Message) -> None:
 
 
 @bot.message_handler(commands=["start"])
-def start(message : telebot.types.Message) -> None:
+def start(message: telebot.types.Message) -> None:
     """
     Handles the /start command.
 
@@ -64,7 +64,7 @@ def start(message : telebot.types.Message) -> None:
 
 
 @bot.message_handler(commands=["rating"])
-def rating(message : telebot.types.Message) -> None:
+def rating(message: telebot.types.Message) -> None:
     """
     Handles the /rating command.
 
@@ -89,7 +89,7 @@ def rating(message : telebot.types.Message) -> None:
 
 
 @bot.message_handler(commands=["new"])
-def create_new_game(message : telebot.types.Message) -> None:
+def create_new_game(message: telebot.types.Message) -> None:
     """
     Handles the /new command.
 
@@ -112,7 +112,7 @@ def create_new_game(message : telebot.types.Message) -> None:
     )
 
 
-def check_code(message : telebot.types.Message) -> None:
+def check_code(message: telebot.types.Message) -> None:
     """
     Checks the code sent by the user.
 
@@ -132,7 +132,7 @@ def check_code(message : telebot.types.Message) -> None:
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "close")
-def create_close_game(call : telebot.types.CallbackQuery) -> None:
+def create_close_game(call: telebot.types.CallbackQuery) -> None:
     """
     Handles the "close" button.
 
@@ -143,7 +143,7 @@ def create_close_game(call : telebot.types.CallbackQuery) -> None:
 
 
 @bot.message_handler(commands=["join"])
-def try_join(message : telebot.types.Message) -> None:
+def try_join(message: telebot.types.Message) -> None:
     """
     Handles the /join command.
 
@@ -178,7 +178,7 @@ def try_join(message : telebot.types.Message) -> None:
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "open")
-def put_in_query(call : telebot.types.CallbackQuery) -> None:
+def put_in_query(call: telebot.types.CallbackQuery) -> None:
     """
     Handles the "open" button.
 
@@ -209,7 +209,7 @@ def put_in_query(call : telebot.types.CallbackQuery) -> None:
         rooms[code].create_boards(bot)
 
 
-def add_game(id, result : str) -> None:
+def add_game(id, result: str) -> None:
     """
     Adds a game result to the player's rating.
 
@@ -229,7 +229,7 @@ def add_game(id, result : str) -> None:
 
 
 @bot.callback_query_handler(func=lambda call: True)
-def process_move(call : telebot.types.CallbackQuery) -> None:
+def process_move(call: telebot.types.CallbackQuery) -> None:
     """
     Handles a move in the game.
 

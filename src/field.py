@@ -1,5 +1,6 @@
 from typing import Union
 
+
 class Point:
     """
         Represents a point on a 2D grid.
@@ -8,6 +9,7 @@ class Point:
         x (int): The x-coordinate of the point.
         y (int): The y-coordinate of the point.
     """
+
     def __init__(self, x: int, y: int) -> None:
         """
             Initializes a new Point object.
@@ -18,7 +20,7 @@ class Point:
         self.x = x
         self.y = y
 
-    def __add__(self, other : "Point") -> "Point":
+    def __add__(self, other: "Point") -> "Point":
         """
             Returns a new Point that is the sum of the given points.
 
@@ -27,7 +29,7 @@ class Point:
         """
         return Point(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other : "Point") -> "Point":
+    def __sub__(self, other: "Point") -> "Point":
         """
             Returns a new Point that is the difference of the given points.
 
@@ -36,7 +38,7 @@ class Point:
         """
         return Point(self.x - other.x, self.y - other.y)
 
-    def __lt__(self, other : "Point") -> bool:
+    def __lt__(self, other: "Point") -> bool:
         """
             Checks if the given point is less than the current point.
 
@@ -45,7 +47,7 @@ class Point:
         """
         return self.x < other.x and self.y < other.y
 
-    def __eq__(self, other : "Point") -> bool:
+    def __eq__(self, other: "Point") -> bool:
         """
             Checks if the given point is equal to the current point.
 
@@ -54,7 +56,7 @@ class Point:
         """
         return self.x == other.x and self.y == other.y
 
-    def __mul__(self, coefficient : int) -> "Point":
+    def __mul__(self, coefficient: int) -> "Point":
         """
             Returns a new Point that is the product of the given point and the coefficient.
 
@@ -64,7 +66,7 @@ class Point:
         return Point(self.x * coefficient, self.y * coefficient)
 
 
-def at(point : "Point", arr : list) -> str:
+def at(point: "Point", arr: list) -> str:
     """
         Returns the value at the given point in the 2D array.
 
@@ -87,17 +89,18 @@ class Field:
         full_cells_count (int): The number of cells that have been filled.
 
     """
+
     def __init__(self):
         """
-            Initializes a new Field object.
+        Initializes a new Field object.
 
-            The game field is initialized with default values:
-            height = 6
-            width = 7
-            chain_length = 4
+        The game field is initialized with default values:
+        height = 6
+        width = 7
+        chain_length = 4
 
-            The game field is represented as a 2D list, and is initially filled with spaces.
-            The number of cells that have been filled is set to 0.
+        The game field is represented as a 2D list, and is initially filled with spaces.
+        The number of cells that have been filled is set to 0.
 
         """
         self.height = 6
@@ -106,7 +109,7 @@ class Field:
         self.field_storage = [[" "] * self.width for i in range(self.height)]
         self.full_cells_count = 0
 
-    def make_move(self, row : int, column : int) -> int:
+    def make_move(self, row: int, column: int) -> int:
         """
         Processes a move in the game.
 

@@ -6,7 +6,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from src.field import Field
 
 
-def create_keyboard(field : Field, code : str) -> InlineKeyboardMarkup:
+def create_keyboard(field: Field, code: str) -> InlineKeyboardMarkup:
     """
     Create a keyboard for the given field and code.
 
@@ -46,7 +46,8 @@ class Room:
         message_1 (Optional[Message]): The message sent to the first player.
         message_2 (Optional[Message]): The message sent to the second player.
     """
-    def __init__(self, id1 : Union[int, str], id2 : Union[int, str], code : str) -> None:
+
+    def __init__(self, id1: Union[int, str], id2: Union[int, str], code: str) -> None:
         """
         Initializes a new Room object.
 
@@ -60,7 +61,7 @@ class Room:
         self.field = Field()
         self.message_1 = None
         self.message_2 = None
-        
+
     def get_keyboard(self) -> InlineKeyboardMarkup:
         """
         Creates and returns an inline keyboard for the game field.
@@ -77,7 +78,7 @@ class Room:
         """
         return self.id1, self.id2
 
-    def create_boards(self, bot : TeleBot) -> None:
+    def create_boards(self, bot: TeleBot) -> None:
         """
         Sends a message to both players with an inline keyboard representing
         the game board.
@@ -96,7 +97,9 @@ class Room:
             reply_markup=self.get_keyboard(),
         )
 
-    def put_symbol(self, user_id : Union[int, str], cord : tuple[int, int], bot : TeleBot) -> int:
+    def put_symbol(
+        self, user_id: Union[int, str], cord: tuple[int, int], bot: TeleBot
+    ) -> int:
         """
         Processes a move in the game.
 

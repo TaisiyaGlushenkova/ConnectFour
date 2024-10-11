@@ -45,7 +45,9 @@ class RoomTest(unittest.TestCase):
         self.assertEqual(len(markup.keyboard), self.room.field.height)
         for row in range(self.room.field.height):
             for column in range(self.room.field.width):
-                self.assertIsInstance(markup.keyboard[row][column], InlineKeyboardButton)
+                self.assertIsInstance(
+                    markup.keyboard[row][column], InlineKeyboardButton
+                )
                 self.assertEqual(
                     str(row) + " " + str(column) + " " + self.room.code,
                     markup.keyboard[row][column].callback_data,
