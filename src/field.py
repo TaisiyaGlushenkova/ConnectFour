@@ -1,5 +1,7 @@
 from typing import Union
 
+import src.constants as constants
+
 
 class Point:
     """
@@ -94,20 +96,15 @@ class Field:
         """
         Initializes a new Field object.
 
-        The game field is initialized with default values:
-        height = 6
-        width = 7
-        chain_length = 4
-
-        The game field is represented as a 2D list, and is initially filled with spaces.
-        The number of cells that have been filled is set to 0.
-
+        Sets the height, width, and chain length to the default values.
+        Initializes the game field as a 2D list of spaces.
+        Sets the count of full cells to 0.
         """
-        self.height = 6
-        self.width = 7
-        self.chain_length = 4
+        self.height = constants.HEIGHT_DEFAULT
+        self.width = constants.WIDTH_DEFAULT
+        self.chain_length = constants.CHAIN_LENGTH_DEFAULT
         self.field_storage = [[" "] * self.width for i in range(self.height)]
-        self.full_cells_count = 0
+        self.full_cells_count = constants.FULL_CELLS_COUNT_DEFAULT
 
     def make_move(self, row: int, column: int) -> int:
         """
