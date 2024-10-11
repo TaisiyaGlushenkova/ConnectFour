@@ -1,7 +1,10 @@
+from typing import List
+from telebot.types import Message
+
 from src.bot import *
 
 
-def listener(messages):
+def listener(messages: List[Message]) -> None:
     for m in messages:
         print(str(m))
 
