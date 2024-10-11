@@ -1,5 +1,6 @@
 # ConnectFour
 TL;DR connect four game in telegram bot
+Author: Глушенкова Таисия Николаевна, Б05-327
 
 ## Функционал
 /start запуск бота
